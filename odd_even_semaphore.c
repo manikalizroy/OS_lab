@@ -33,6 +33,7 @@ void *thread_f(void *arg)
    while(1)
    {
       wait(&semaphore);
+      //If the semaphore value is greater than 0, the philosopher decrements it and proceeds; otherwise, they wait until it becomes available.
       if(state==st)
       {
          printf("From thread [%d] >> %d\n",st,no);
