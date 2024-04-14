@@ -19,7 +19,11 @@ void signal(int *semaphore)
    (*semaphore)++;
 }
 
-/*The thread_f function is defined, which represents the behavior of a philosopher. It takes a pointer to an integer (arg) as input, which represents the philosopher's number. Inside an infinite loop, the philosopher waits for access to the shared resource, checks if it's their turn to eat based on the state, prints their action if it is, updates the state, and then signals that they're done with the shared resource.
+/*The thread_f function is defined, which represents the behavior of a philosopher.
+It takes a pointer to an integer (arg) as input, which represents the philosopher's number. 
+Inside an infinite loop, the philosopher waits for access to the shared resource, 
+checks if it's their turn to eat based on the state, prints their action if it is, updates the state,
+and then signals that they're done with the shared resource.
 */
 
 void *thread_f(void *arg)
