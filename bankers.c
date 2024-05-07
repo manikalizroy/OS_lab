@@ -24,43 +24,46 @@ void calneed() {
     }
 }
 
-bool safe() {
+bool safe()
+{
     int work[MAX_RESOURCES];
-    int i, j;
-    for(i = 0; i < n; i++) {
-        work[i] = avail[i];
-    }
-    for(j = 0; j < m; j++) {
-        finish[j] = false;
-    }
     int count = 0;
-    while(count < m) { 
+    for(i = 0; i < n; i++)
+        work[i] = avail[i];
+    while (count < m)
+    {
         bool found = false;
-        for(i = 0; i < m; i++) {
-            if(!finish[i]) {
-                bool can_allocate = true; 
-                for(j = 0; j < n; j++) {
-                    if(need[i][j] > work[j]) {
-                        can_allocate = false; 
+        for (i = 0; i < m; i++)
+        {
+            if (!finish[i])
+            {
+                bool can_alloc = true;
+                for (j = 0; j < n; j++)
+                {
+                    if (need[i][j] > work[j])
+                    {
+                        can_alloc = false;
                         break;
                     }
                 }
-                if(can_allocate) { 
-                    for(int k = 0; k < n; k++) {
+                if (can_alloc)
+                {
+                    for (int k = 0; k < n; k++)
                         work[k] += alloc[i][k];
-                    }
                     finish[i] = true;
                     safeseq[count++] = i;
                     found = true;
                 }
             }
         }
-        if(!found) {
-            return false;
-        }
+        if (!found)
+            break;
     }
-    return true;
+    if (count < m)
+        return false; // Deadlock detected
+    return true; // No deadlock detected
 }
+
 
 int main() {
     int i, j;
