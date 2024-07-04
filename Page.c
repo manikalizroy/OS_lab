@@ -158,3 +158,70 @@ int main() {
     }
     return 1; 
 }
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <stdio.h>
+#include <stdlib.h>
+
+int i,j,n,f,fault,k,flag;
+
+void printfframes(int frames[],int f)
+{
+    int i;
+    for(i=0;i<f;i++)
+    {
+        printf("|%d|\n",frames[i]);
+    }
+    printf("\n\n");
+}
+
+void fifo(int p, int pages[],int f)
+{
+    int i=n,j,frames[f];
+    for(j=0;j<f;j++)
+    {
+        frames[j] = -1;
+    }
+    fault=0;
+    k=0;
+    for(i=0;i<n;i++)
+    {
+        p=pages[i];
+        flag=1;
+        for(j=0;j<f;j++)
+        {
+            if(p==frames[j])
+            {
+                flag=0;
+                break;
+            }
+        }
+        if(flag==1)
+        {
+            fault++;
+            frames[k] = p;
+            k=(k+1)%f;
+            printfframes(frames,f);
+        }
+        else
+            printfframes(frames,f);
+    }
+    printf("Total page fault is :%d",fault);
+    
+}
+
+int main()
+{
+    printf("Enter the total no of pages"); 
+    scanf("%d",&n);
+    printf("Enter the total no of frames"); 
+    scanf("%d",&f);
+    int pages[n]; 
+    printf("Enter the page sequence"); 
+    for(i=0;i<n;i++) {
+        scanf("%d",&pages[i]); 
+    }
+    fifo(n,pages,f);
+}    
