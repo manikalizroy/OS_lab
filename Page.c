@@ -167,14 +167,14 @@ int main() {
 
 int i,j,n,f,fault,k,flag;
 
-void printfframes(int frames[],int f)
-{
-    int i;
-    for(i=0;i<f;i++)
-    {
-        printf("|%d|\n",frames[i]);
+void printframes(int frames[], int f) {
+    for (int i = 0; i < f; i++) {
+        if (frames[i] == -1)
+            printf("-\t");
+        else
+            printf("%d\t", frames[i]);
     }
-    printf("\n\n");
+    printf("\n");
 }
 
 void fifo(int p, int pages[],int f)
