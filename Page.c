@@ -212,6 +212,61 @@ void fifo(int p, int pages[],int f)
     
 }
 
+
+
+// Function implementing the LFU page replacement algorithm
+void lfu(int pages[], int n, int frames[], int f) {
+    int i, j, p, time = 0;
+    int min, fr[f], freq[f], count[f], fault = 0;
+
+    // Initialize frames, frequency, and count arrays
+    for (j = 0; j < f; j++) {
+        fr[j] = frames[j];  // Initialize frames with initial frame contents
+        freq[j] = 0;         // Initialize frequency of each frame as 0
+        count[j] = 0;        // Initialize count for each frame as 0
+    }
+
+    printf("\tLFU page replacement\n");
+
+    for (i = 0; i < n; i++) {
+        p = pages[i];
+        int flag = 1;
+        time++;
+
+        // Check if the page is already in one of the frames
+        for (j = 0; j < f; j++) {
+            if (p == fr[j]) {
+                flag = 0;
+                freq[j]++;        // Increment frequency of accessed frame
+                break;
+            }
+        }
+
+        if (flag == 1) {
+            fault++;
+            min = 0;
+
+            // Find the frame with the minimum frequency and, in case of a tie, the oldest one
+            for (j = 1; j < f; j++) {
+                if (freq[j] < freq[min] || (freq[j] == freq[min] && count[j] < count[min])) {
+                    min = j;
+                }
+            }
+
+            // Replace the page in the frame with minimum frequency (and oldest if tie)
+            fr[min] = p;
+            freq[min] = 1;        // Set frequency of the new page to 1
+            count[min] = time;    // Update count of the new page to current time
+            printframes(fr, f);
+        } else {
+            printframes(fr, f);
+        }
+    }
+
+    printf("Total number of page faults is: %d\n", fault);
+}
+
+
 int main()
 {
     printf("Enter the total no of pages"); 
@@ -224,4 +279,5 @@ int main()
         scanf("%d",&pages[i]); 
     }
     fifo(n,pages,f);
+    lfu(pages, n, frames, f);
 }    
