@@ -278,7 +278,7 @@ void scan(int arr[],int n,int p,int max){
 	int seekTime=0,temp[n],i;
 	copy(arr,temp,n);
 	sort(temp,n);
-	int index = reqIndex(temp,n,p);
+	int index = reqIndex(temp,n,p); //temp is sorted array
 
 	seekTime+=getSeekTime(p,max);
 
