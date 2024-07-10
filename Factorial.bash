@@ -1,6 +1,6 @@
 echo "Enter a number"
 read num
-
+#no space when assigning value or doing arithmetic operations
 fact=1
 
 while [ $num -gt 1 ]
