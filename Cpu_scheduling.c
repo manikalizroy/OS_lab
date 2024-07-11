@@ -1,31 +1,13 @@
 #include<stdio.h>
 #include<stdlib.h>
 struct process{
-                int at;
-                int bt;
-                int tt;
-                int wt;
-                int ct;
-                int pid;
-                int prio;
-                int completed;
-                int st;
-                int rt;
-                int rem;
+int at, bt, tt, wt,ct, pid, prio, completed,st, rt,rem;
 }p[10],temp;
-int n;
-int i,j,total;
+int n, i,j,total;
 void fcfs()
 {
         total=0;
         float avg_wt=0,avg_tt=0;
-        printf("Enter the number of process");
-        scanf("%d",&n);
-        for(i=0;i<n;i++)
-        {
-                printf("\n Enter the pid,arrival time,burst time in order");
-                scanf("%d %d %d",&p[i].pid,&p[i].at,&p[i].bt);
-        }
         for(i=0;i<n-1;i++)
         {
                 for(j=0;j<n-i-1;j++)
@@ -61,97 +43,81 @@ void fcfs()
 }
 void sjf()
 {
-        int totalburst,completed=0,currenttime=0;
-        total=0;
-        float avg_wt=0,avg_tt=0;
-        printf("Enter the number of process");
-        scanf("%d",&n);
+    int totalburst,completed=0,currenttime=0;
+    total=0;
+    float avg_wt=0,avg_tt=0;
+    for(i=0;i<n;i++)
+    {
+        totalburst+=p[i].bt;
+    }
+    for(i=0;i<n-1;i++)
+    {
+        for(j=0;j<n-i-1;j++)
+        {
+            if(p[j].at>p[j+1].at)
+            {
+                temp=p[j];
+                p[j]=p[j+1];
+                p[j+1]=temp;
+             }
+        }
+    }
+    for(i=0;i<n-1;i++)
+    {
+        for(j=0;j<n-i-1;j++)
+        {
+        if(p[j].at==p[j+1].at && p[j].bt>p[j+1].bt)
+        {
+            temp=p[j];
+            p[j]=p[j+1];
+            p[j+1]=temp;
+        }
+    }
+    }
+    while(completed!=n)
+    {
+        int min_index=-1;
+        int minimum=totalburst;
         for(i=0;i<n;i++)
         {
-                printf("\n Enter the pid,arrival time,burst time in order");
-                scanf("%d %d %d",&p[i].pid,&p[i].at,&p[i].bt);
+            if(p[i].at<=currenttime && p[i].completed==0)
+            {
+                if(p[i].bt<minimum)
+                {
+                    minimum=p[i].bt;
+                    min_index=i;
+                }
+                if(p[i].bt==minimum)
+                {
+                    if(p[i].at<p[min_index].at)
+                    {
+                        minimum=p[i].bt;
+                        min_index=i;
+                    }
+                }
+            }
         }
+        if(min_index==-1)
+        {
+            currenttime++;                          
+        }
+        else
+        {
+            p[min_index].st=currenttime;
+            p[min_index].ct=p[min_index].st+p[min_index].bt;
+            p[min_index].tt=p[min_index].ct-p[min_index].at;
+            p[min_index].wt=p[min_index].tt-p[min_index].bt;
+            completed++;
+            p[min_index].completed=1;
+            currenttime=p[min_index].ct;
+            avg_wt+=p[min_index].wt;
+            avg_tt+=p[min_index].tt;
+        }
+    }
+    printf(" PID | ARR | BURST | COMP | TURN | WAIT \n");
         for(i=0;i<n;i++)
         {
-                totalburst+=p[i].bt;
-        }
-        for(i=0;i<n-1;i++)
-        {
-                for(j=0;j<n-i-1;j++)
-                {
-                        if(p[j].at>p[j+1].at)
-                        {
-                                temp=p[j];
-                                p[j]=p[j+1];
-                                p[j+1]=temp;
-                        }
-                }
-        }
-        for(i=0;i<n-1;i++)
-        {
-                 for(j=0;j<n-i-1;j++)
-                {
-                        if(p[j].at==p[j+1].at && p[j].bt>p[j+1].bt)
-                        {
-                                temp=p[j];
-                                p[j]=p[j+1];
-                                p[j+1]=temp;
-                        }
-                }
-        }
-        printf("\n Gantt Chart \n");
-        printf("%d",p[0].at);
-        printf("\n");
-        for(i=0;i<n;i++)
-        {
-                p[i].completed=0;
-        }
-        while(completed!=n)
-        {
-                int min_index=-1;
-                int minimum=totalburst;
-                for(i=0;i<n;i++)
-                {
-                        if(p[i].at<=currenttime && p[i].completed==0)
-                        {
-                                if(p[i].bt<minimum)
-                                {
-                                        minimum=p[i].bt;
-                                        min_index=i;
-                                }
-                                if(p[i].bt==minimum)
-                                {
-                                        if(p[i].at<p[min_index].at)
-                                        {
-                                                minimum=p[i].bt;
-                                                min_index=i;
-                                        }
-                                }
-                        }
-                }
-                if(min_index==-1)
-                {
-                        currenttime++;                                                                                    
-                }
-                else
-                {
-                        p[min_index].st=currenttime;
-                        p[min_index].ct=p[min_index].st+p[min_index].bt;
-                        p[min_index].tt=p[min_index].ct-p[min_index].at;
-                        p[min_index].wt=p[min_index].tt-p[min_index].bt;
-                        completed++;
-                        p[min_index].completed=1;
-                        currenttime=p[min_index].ct;
-                        avg_wt+=p[min_index].wt;
-                        avg_tt+=p[min_index].tt;
-                        printf("|P%d|%d",p[min_index].pid,p[min_index].ct);
-                }
-                printf("value of completed=%d",completed);
-        }
-        printf("\nPID\t ARR \t BURST \t COMP \t TURN \t WAIT \n");
-        for(i=0;i<n;i++)
-        {
-                printf("\n%d\t%d\t%d\t%d\t%d\t%d\n",p[i].pid,p[i].at,p[i].bt,p[i].ct,p[i].tt,p[i].wt);
+        printf("\n%d\t%d\t%d\t%d\t%d\t%d\n",p[i].pid,p[i].at,p[i].bt,p[i].ct,p[i].tt,p[i].wt);
         }
         printf("\n Average waiting time :%f",avg_wt/n);
         printf("\n Average turnaround time:%f",avg_tt/n);
@@ -159,12 +125,8 @@ void sjf()
 void priority()
 {
         float avg_wt=0,avg_tt=0;
-        printf("\n Enter the number of processes");
-        scanf("%d",&n);
         for(i=0;i<n;i++)
         {
-                printf("\n Enter the pid,arrival time  burst time and priority in order");
-                scanf("%d %d %d %d",&p[i].pid,&p[i].at,&p[i].bt,&p[i].prio);
                 p[i].rt=p[i].bt;
                 p[i].completed=0;
 
@@ -192,13 +154,6 @@ void priority()
                                 p[j+1]=temp;
                         }
                 }
-        }
-        printf("\n Gantt Chart \n");
-        printf("%d",p[0].at);
-        printf("\n After sorting based on arrival time\n");
-        for(i=0;i<n;i++)
-        {
-                printf("%d",p[i].pid);
         }
         for(i=0;i<n-1;i++)
         {
@@ -242,9 +197,7 @@ void priority()
                         currenttime=p[min_index].ct;
                         avg_wt+=p[min_index].wt;
                         avg_tt+=p[min_index].tt;
-                        printf("|P%d|%d",p[min_index].pid,p[min_index].ct);
                         p[min_index].completed=1;
-
                 }
         }
         printf("\nPID\t PRIOR \tARR \t BURST \t COMP \t TURN \t WAIT \n");
@@ -254,19 +207,11 @@ void priority()
         }
         printf("\n Average waiting time :%f",avg_wt/n);
         printf("\n Average turnaround time:%f",avg_tt/n);
-
 }
 void roundrobin()
 {
         int slice,i,j,time,remain,flag;
         float avg_wt=0,avg_tt=0;
-        printf("\n Enter the number of processes");
-        scanf("%d",&n);
-        for(i=0;i<n;i++)
-        {
-                printf("\n Enter the pid,arrival time  burst time in order");
-                scanf("%d %d %d",&p[i].pid,&p[i].at,&p[i].bt);
-                  }
         printf("\n Enter the time slice");
         scanf("%d",&slice);
         for(i=0;i<n-1;i++)
@@ -324,36 +269,24 @@ void roundrobin()
                         i=0;
                 }
         }
-        printf("\nAverage turnaround time:%f",(avg_tt/n));
-        printf("\nAverage waiting time:%f",(avg_wt/n));
-
+        printf("\nAverage turnaround time:%f",avg_tt/n);
+        printf("\nAverage waiting time:%f",avg_wt/n);
 }
 void main()
 {
-        int op;
-        while(1)
+    printf("\n Enter the number of processes:");
+        scanf("%d",&n);
+        for(i=0;i<n;i++)
         {
-                printf("\n1.FCFS \n2.SJF \n3.PRIORITY \n 4.ROUND ROBIN \n5.EXIT");
-                printf("\n Choose any option");
-                scanf("%d",&op);
-                switch(op)
-                {
-                        case 1:
-                                fcfs();
-                                break;
-                        case 2:
-                                sjf();
-                                break;
-                        case 3:
-                                priority();
-                                break;
-                        case 4:
-                                roundrobin();
-                                break;
-                        case 5:
-                                exit(0);
-                        default:
-                                 printf("\n Invalid option");
-                }
-        }
+                printf("\n Enter the pid,arrival time,burst time,priority in order:");
+                scanf("%d %d %d %d",&p[i].pid,&p[i].at,&p[i].bt,&p[i].prio);
+                  }
+    printf("FIRST COME FIRST SERVE\n");
+    fcfs();
+    printf("\nSHORTEST JOB FIRST\n");
+    sjf();
+    printf("\nPRIORITY\n");
+    priority();
+    printf("\nROUND ROBIN\n");
+    roundrobin();
 }
